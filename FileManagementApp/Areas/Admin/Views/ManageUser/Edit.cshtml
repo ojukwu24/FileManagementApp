@@ -1,0 +1,117 @@
+﻿@model ManageUserModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+<section class="container mt-5 mb-3">
+    @if (ViewBag.user != null)
+    {
+        <h2 class="m-3">Manage user: @ViewBag.user.Email</h2>
+        <div class="row" mt-3>
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addToRoleModal">
+                        Add To Role
+                    </button>
+
+                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#removeFromRoleModal">
+                        Remove from To Role
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="alert-info alert-dismissible">
+                    <strong class="text-center">@ViewBag.statusMessage</strong>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <form method="post" action="/Admin/ManageUser/Edit" asp-antiforgery="true">
+                    <h4>Edit user.</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="EditUserModel.PhoneNumber"></label>
+                        <input asp-for="EditUserModel.PhoneNumber" class="form-control" value="@ViewBag.user.PhoneNumber" />
+                        <span asp-validation-for="EditUserModel.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <input asp-for="EditUserModel.Id" value="@ViewBag.user.Id" hidden="hidden" />
+                    <button type="submit" class="btn btn-primary">Update User</button>
+                </form>
+            </div>
+
+            @*Add to role user modal*@
+            <div class="modal fade" id="addToRoleModal" tabindex="-1" role="dialog" aria-labelledby="addToRoleModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addToRoleModalLongTitle">Add To Role</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="/Admin/ManageUser/AddUserToRole" asp-antiforgery="true">
+                                <div class="form-group">
+                                    <label asp-for="AddUserToRoleModel.Email"></label>
+                                    <input asp-for="AddUserToRoleModel.Email" value="@ViewBag.user.Email" class="form-control" readonly="readonly" />
+                                </div>
+                                <input asp-for="AddUserToRoleModel.Id" value = "@ViewBag.user.Id" hidden="hidden" />
+                                <div class="form-group">
+                                    <label asp-for="AddUserToRoleModel.Role"></label>
+                                    <select asp-for="AddUserToRoleModel.Role"
+                                            asp-items="@(new SelectList(@ViewBag.availableRoles, "Name", "Name"))" class="form-control">
+                                    </select>
+                                    <span asp-validation-for="AddUserToRoleModel.Role" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary"> Add </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Remove user from modal*@
+            <div class="modal fade" id="removeFromRoleModal" tabindex="-1" role="dialog" aria-labelledby="removeFromRoleModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="removeFromRoleModalLongTitle">Remove from Role</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="/Admin/ManageUser/RemoveUserFromRole" asp-antiforgery="true">
+
+                                <div class="form-group">
+                                    <label asp-for="RemoveUserFromRoleModel.Email"></label>
+                                    <input asp-for="RemoveUserFromRoleModel.Email" value="@ViewBag.user.Email" class="form-control" readonly="readonly" />
+                                </div>
+                                <input asp-for="RemoveUserFromRoleModel.Id" value="@ViewBag.user.Id" hidden="hidden" />
+                                <div class="form-group">
+                                    <label asp-for="RemoveUserFromRoleModel.Role"></label>
+                                    <select asp-for="RemoveUserFromRoleModel.Role"
+                                            asp-items="@(new SelectList(@ViewBag.user.RoleNames))" class="form-control">
+                                    </select>
+                                    <span asp-validation-for="RemoveUserFromRoleModel.Role" class="text-danger"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary"> Remove </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="jumbotron text-center">
+            <h3> User not found! </h3>
+            <a href="/Admin/ManageUser" class="btn btn-outline-primary mt-2"> Go back </a>
+        </div>
+    }
+
+</section>

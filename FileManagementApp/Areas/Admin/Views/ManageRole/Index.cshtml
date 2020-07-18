@@ -1,0 +1,90 @@
+﻿@model RoleDto
+@{
+    ViewData["Title"] = "All Roles";
+    int i = 0;
+}
+
+<section class="container mt-5 mb-3">
+    @if (ViewBag.allRoles?.Count > 0)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#addRoleModal">
+                        Add New Role
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+    <h2 class="m-3">@ViewData["Title"]</h2>
+    <div class="row m-3">
+        <div class = "col-md-12" >
+            <div class = "alert-info alert-dismissible" >
+                <strong class = "text-center" >@ViewBag.statusMessage</strong>
+            </div>
+        </div>
+        <div class="col-md-6 offset-md-3">
+            @if (ViewBag.allRoles?.Count > 0)
+            {
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">S/N</th>
+                            <th scope="col">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var role in ViewBag.allRoles)
+                            {
+                                <tr>
+                                    <td>@(++i)</td>
+
+                                    <td>@role.Name</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            }
+            else
+            {
+                <div class="jumbotron">
+                    <h3> No role to display</h3>
+                    <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#addRoleModal">
+                        Add New Role
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    @*Add new role modal*@
+    <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-labelledby="addRoleModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRoleModalLongTitle">Add New Role</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/Admin/ManageRole/Add" asp-antiforgery="true">
+                        <div class="form-group">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name"  class="form-control" />
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary"> Add </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
